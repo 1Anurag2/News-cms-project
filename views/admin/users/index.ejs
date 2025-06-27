@@ -8,82 +8,48 @@
         <a class="add-new" href="/admin/add-users">add user</a>
       </div>
       <div class="col-md-12">
-        <table class="content-table">
-          <thead>
-            <th>S.No.</th>
-            <th>Full Name</th>
-            <th>User Name</th>
-            <th>Role</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="id">1</td>
-              <td>Ram Sharma</td>
-              <td>ram</td>
-              <td>admin</td>
-              <td class="edit">
-                <a href="update-user.html"><i class="fa fa-edit"></i></a>
-              </td>
-              <td class="delete">
-                <a href="delete-user.html"><i class="fa fa-trash-o"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">2</td>
-              <td>Shyam Kumar</td>
-              <td>shyam</td>
-              <td>author</td>
-              <td class="edit">
-                <a href="update-user.html"><i class="fa fa-edit"></i></a>
-              </td>
-              <td class="delete">
-                <a href="delete-user.html"><i class="fa fa-trash-o"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">3</td>
-              <td>Ramesh Kumar</td>
-              <td>ramesh</td>
-              <td>admin</td>
-              <td class="edit">
-                <a href="update-user.html"><i class="fa fa-edit"></i></a>
-              </td>
-              <td class="delete">
-                <a href="delete-user.html"><i class="fa fa-trash-o"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">4</td>
-              <td>Satish Sharma</td>
-              <td>satish</td>
-              <td>admin</td>
-              <td class="edit">
-                <a href="update-user.html"><i class="fa fa-edit"></i></a>
-              </td>
-              <td class="delete">
-                <a href="delete-user.html"><i class="fa fa-trash-o"></i></a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <nav>
-          <ul class="pagination">
-            <li class="page-item disabled">
-              <a class="page-link">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active">
-              <a class="page-link" href="#" aria-current="page">2</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
-          </ul>
-        </nav>
+        <!-- <%= users %> -->
+        <div id="usersTable"></div>
       </div>
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script
+  type="text/javascript"
+  src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"
+></script>
+
+<script>
+     const tableData = <%- JSON.stringify(users) %>
+    //  console.log(tableData)
+
+     var table = new Tabulator("#usersTable", {
+      data:tableData,           //load row data from array
+      layout:"fitColumns",      //fit columns to width of table
+      responsiveLayout:"hide",  //hide columns that don't fit on the table
+      addRowPos:"top",          //when adding a new row, add it to the top of the table
+      history:true,             //allow undo and redo actions on the table
+      pagination:"local",       //paginate the data
+      paginationSize:7,         //allow 7 rows per page of data
+      paginationCounter:"rows", //display count of paginated rows in footer
+      movableColumns:true,      //allow column order to be changed
+      initialSort:[             //set the initial sort order of the data
+          {column:"name", dir:"asc"},
+      ],
+      columnDefaults:{
+          tooltip:true,         //show tool tips on cells
+      },
+      columns:[                 //define the table columns
+          {title:"Full Name", field:"fullname", headerFilter:"input"},
+          {title:"User Name", field:"username", headerFilter:"input"},
+          {title:"Role", field:"role", headerFilter:"input"},
+          {title:"Actions", formatter:function(cell,formatterParams,onRendered){
+            return `<a href="/admin/update-users/${cell.getData()._id}" class="btn btn-sm btn-success">Edit</a>
+            <button class="btn btn-sm btn-danger delete-user" onclick="deleteUser('${cell.getData()._id}')">Delete</button>`;
+          }}
+
+      ],
+  });
+</script>
