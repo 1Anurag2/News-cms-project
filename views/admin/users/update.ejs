@@ -9,12 +9,13 @@
           <h5 class="card-header">Update User</h5>
           <div class="card-body">
             <!-- Form Start -->
-            <form action="" method="POST" autocomplete="off">
+            <form action="/admin/update-users/<%= user.id %>" method="POST" autocomplete="off">
               <div class="mb-3">
                 <label class="form-label">Full Name</label>
                 <input
                   type="text"
-                  name="fname"
+                  name="fullname"
+                  value="<%= user.fullname %>"
                   class="form-control"
                   placeholder="Full Name"
                   required
@@ -24,10 +25,11 @@
                 <label class="form-label">User Name</label>
                 <input
                   type="text"
-                  name="user"
+                  name="username"
+                  value="<%= user.username %>"
                   class="form-control"
                   placeholder="Username"
-                  required
+                  disabled
                 />
               </div>
 
@@ -38,14 +40,14 @@
                   name="password"
                   class="form-control"
                   placeholder="Password"
-                  required
+                  
                 />
               </div>
               <div class="mb-3">
                 <label class="form-label">User Role</label>
                 <select class="form-control" name="role">
-                  <option value="0">Author</option>
-                  <option value="1">Administrator</option>
+                  <option value="Author" value <%= user.role == 'Author' ? 'selected' : '' %>>Author</option>
+                  <option value="Admin" value <%= user.role == 'Admin' ? 'selected' : '' %>>Administrator</option>
                 </select>
               </div>
               <input

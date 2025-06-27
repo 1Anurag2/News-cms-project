@@ -12,9 +12,7 @@
     <link rel="stylesheet" href="/css/font-awesome.css" />
     <!-- Custom stlylesheet -->
     <link rel="stylesheet" href="/css/style.css" />
-    <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
-    <link href="/css/tabulator_bootstrap5.min.css" rel="stylesheet">
-
+    <%- typeof tabulatorCss == 'undefined' ? '' : tabulatorCss%>
   </head>
   <body>
     <!-- HEADER -->
@@ -53,18 +51,22 @@
               <li>
                 <a href="/admin/article">Article</a>
               </li>
+              <% if(role === 'Admin'){ %>
               <li>
                 <a href="/admin/category">Category</a>
               </li>
               <li>
                 <a href="/admin/users">Users</a>
               </li>
+              <% } %>
               <li>
                 <a href="/admin/comments">Comments</a>
               </li>
+              <% if(role === 'Admin'){ %>
               <li>
                 <a href="/admin/setting">Settings</a>
               </li>
+              <% } %>
             </ul>
           </div>
         </div>

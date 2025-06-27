@@ -1,6 +1,6 @@
 const express = require("express");
 const expressEjsLayouts = require("express-ejs-layouts");
-const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const connectdb = require("./config/connectdb");
 const path = require("path");
 require("dotenv").config();
@@ -10,6 +10,7 @@ const port = 3000;
 
 //middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(expressEjsLayouts);

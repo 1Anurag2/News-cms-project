@@ -24,7 +24,19 @@
 <script>
      const tableData = <%- JSON.stringify(users) %>
     //  console.log(tableData)
-
+  async function deleteUser(id){
+      try{
+        if(confirm("Are you sure you want to delete this user?")){
+          const response = await fetch(`/admin/delete-users/${id}`,{
+            method:"DELETE",});
+            if(response.ok){
+              window.location.reload();
+            }
+        }
+      }catch(e){
+        console.log(e);
+    }
+  }
      var table = new Tabulator("#usersTable", {
       data:tableData,           //load row data from array
       layout:"fitColumns",      //fit columns to width of table
@@ -32,7 +44,8 @@
       addRowPos:"top",          //when adding a new row, add it to the top of the table
       history:true,             //allow undo and redo actions on the table
       pagination:"local",       //paginate the data
-      paginationSize:7,         //allow 7 rows per page of data
+      paginationSize:5,         //allow 7 rows per page of data
+      paginationSizeSelector:[1,10,15,50],  // custom pagination options
       paginationCounter:"rows", //display count of paginated rows in footer
       movableColumns:true,      //allow column order to be changed
       initialSort:[             //set the initial sort order of the data
@@ -53,3 +66,10 @@
       ],
   });
 </script>
+
+<%- contentFor('tabulatorCss') %>
+<link
+  href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css"
+  rel="stylesheet"
+/>
+<link href="/css/tabulator_bootstrap5.min.css" rel="stylesheet" />
