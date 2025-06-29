@@ -1,39 +1,113 @@
 <div id="admin-content">
-      <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-            <h1 class="admin-heading">Update Article</h1>
-        </div>
-        <div class="col-md-8 mx-auto">
-          <div class="card">
-            <h5 class="card-header">Update Article</h5>
-            <div class="card-body">
-              <!-- Form -->
-              <form action="/update-article/:id" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="article_title" class="form-label">Title</label>
-                    <input type="text" name="title" id="article_title" class="form-control" autocomplete="off" required>
-                </div>
-                <div class="mb-3">
-                    <label for="summernote" class="form-label">Description</label>
-                    <textarea name="content" id="summernote" class="form-control" rows="5"  required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="article_category" class="form-label">Category</label>
-                    <select name="category" id="article_category" class="form-control">
-                        <option value="" selected> Select Category</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="article_image" class="form-label">Article image</label>
-                    <input type="file" name="image" id="article_image" class="form-control" required>
-                </div>
-                <input type="submit" name="submit" class="btn btn-primary" value="Update" />
-              </form>
-              <!--/Form -->
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="admin-heading">Update Article</h1>
+      </div>
+      <div class="col-md-8 mx-auto">
+        <div class="card">
+          <h5 class="card-header">Update Article</h5>
+          <div class="card-body">
+            <!-- Form -->
+            <form
+              action="/admin/update-articles/<%= article._id %>"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <div class="mb-3">
+                <label for="article_title" class="form-label">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value="<%= article.title %>"
+                  id="article_title"
+                  class="form-control"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="summernote" class="form-label">Description</label>
+                <textarea
+                  name="content"
+                  id="summernote"
+                  class="form-control"
+                  rows="5"
+                  required
+                >
+<%= article.content %></textarea
+                >
+              </div>
+              <div class="mb-3">
+                <label for="article_category" class="form-label"
+                  >Category</label
+                >
+                <select
+                  name="category"
+                  id="article_category"
+                  class="form-control"
+                >
+                  <option value="" selected>Select Category</option>
+                  <% categories.forEach((category) => { %> <% if (category._id
+                  == article.category.id) { %>
+                  <option value="<%= category._id %>" selected>
+                    <%= category.name %>
+                  </option>
+                  <% } else { %>
+                  <option value="<%= category._id %>">
+                    <%= category.name %>
+                  </option>
+                  <% } %> <% }) %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="article_image" class="form-label"
+                  >Article image</label
+                >
+                <br />
+                <img
+                  src="/uploads/<%= article.image %>"
+                  alt=""
+                  class="article-image mb-3 w-25 border-3 border-primary"
+                />
+                <input
+                  type="file"
+                  name="image"
+                  id="article_image"
+                  class="form-control"
+                />
+              </div>
+              <input
+                type="submit"
+                name="submit"
+                class="btn btn-primary"
+                value="Update"
+              />
+            </form>
+            <!--/Form -->
           </div>
         </div>
       </div>
-      </div>
     </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Summernote Lite JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+<!-- <script src="js/summernote-bs5.js"></script> -->
+<script>
+  $(document).ready(function () {
+    $("#summernote").summernote({
+      placeholder: "Start typing...",
+      tabsize: 2,
+      height: 200,
+    });
+  });
+</script>
+
+<%- contentFor('summernoteCss') %>
+<link
+  href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css"
+  rel="stylesheet"
+/>

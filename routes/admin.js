@@ -7,6 +7,7 @@ const categoryController = require('../controllers/categoryController');
 const commentController = require('../controllers/commentController');
 const isLoggedin = require('../middleware/isLoggedin');
 const isAdmin = require('../middleware/isAdmin');
+const upload = require('../middleware/multer');
 
  //Login Routes
 router.get('/', userController.loginPage);
@@ -29,15 +30,15 @@ router.get('/add-category',isLoggedin, isAdmin,categoryController.addCategoryPag
 router.post('/add-category',isLoggedin, isAdmin,categoryController.addCategory);
 router.get('/update-category/:id',isLoggedin, isAdmin,categoryController.updateCategoryPage);
 router.post('/update-category/:id',isLoggedin, isAdmin,categoryController.updateCategory);
-router.get('/delete-category/:id', isLoggedin,isAdmin,categoryController.deleteCategory);
+router.delete('/delete-category/:id', isLoggedin,isAdmin,categoryController.deleteCategory);
 
 //Article crud routes
-router.get('/article',isLoggedin, articleController.allArticles);
-router.get('/add-article', isLoggedin,articleController.addArticlePage);
-router.post('/add-article',isLoggedin, articleController.addArticle);
-router.get('/update-article/:id',isLoggedin, articleController.updateArticlePage);
-router.post('/update-article/:id',isLoggedin, articleController.updateArticle);
-router.get('/delete-article/:id',isLoggedin, articleController.deleteArticle);
+router.get('/articles',isLoggedin, articleController.allArticles);
+router.get('/add-articles', isLoggedin,articleController.addArticlePage);
+router.post('/add-articles',isLoggedin,upload.single('image'), articleController.addArticle);
+router.get('/update-articles/:id',isLoggedin, articleController.updateArticlePage);
+router.post('/update-articles/:id',isLoggedin,upload.single('image'), articleController.updateArticle);
+router.delete('/delete-articles/:id',isLoggedin, articleController.deleteArticle);
 
 //Comment  routes
 router.get('/comments',isLoggedin, commentController.allComments);

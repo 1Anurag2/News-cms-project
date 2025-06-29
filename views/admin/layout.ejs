@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="/css/font-awesome.css" />
     <!-- Custom stlylesheet -->
     <link rel="stylesheet" href="/css/style.css" />
-    <%- typeof tabulatorCss == 'undefined' ? '' : tabulatorCss%>
+    <%- typeof tabulatorCss == 'undefined' ? '' : tabulatorCss%> <%- typeof
+    summernoteCss == 'undefined' ? '' : summernoteCss%>
   </head>
   <body>
     <!-- HEADER -->
@@ -49,7 +50,7 @@
                 <a href="/admin/dashboard">Home</a>
               </li>
               <li>
-                <a href="/admin/article">Article</a>
+                <a href="/admin/articles">Article</a>
               </li>
               <% if(role === 'Admin'){ %>
               <li>

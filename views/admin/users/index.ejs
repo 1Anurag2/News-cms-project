@@ -54,7 +54,9 @@
       columnDefaults:{
           tooltip:true,         //show tool tips on cells
       },
-      columns:[                 //define the table columns
+      columns:[       
+          //define the table columns
+          {title:'Sr.No.',formatter:'rownum',width:100,hozontalAlign:'center'},
           {title:"Full Name", field:"fullname", headerFilter:"input"},
           {title:"User Name", field:"username", headerFilter:"input"},
           {title:"Role", field:"role", headerFilter:"input"},
