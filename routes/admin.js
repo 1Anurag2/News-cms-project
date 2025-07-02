@@ -112,16 +112,32 @@ router.get("/comments", isLoggedin, commentController.allComments);
 router.use(isLoggedin, (req, res, next) => {
   res.status(404).render("admin/404", {
     role: req.role,
-    message: "404 Page Not Found",
+    message: " Page Not Found",
   });
 });
 
 // 500 Error Handler
 router.use(isLoggedin, (err, req, res, next) => {
   console.log(err.stack);
-  res.status(500).render("admin/500", {
+  const status = err.status || 500; // you forgot to define `status`
+  // const view = status === 404 ? 'admin/404' : 'admin/500';
+  let view;
+  switch (status) {
+    case 401:
+      view = "admin/401";
+      break;
+    case 404:
+      view = "admin/404";
+      break;
+    case 500:
+      view = "admin/500";
+      break;
+    default:
+      view = "admin/500";
+  }
+  res.status(status).render(view, {
     role: req.role,
-    message: err.message || "Internal Server Error  ",
+    message: err.message || "Something went wrong",
   });
 });
 
