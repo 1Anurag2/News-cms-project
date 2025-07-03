@@ -6,16 +6,27 @@ const createError = require("../utils/error-message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { validationResult } = require("express-validator");
 
 dotenv.config();
 
 const loginPage = async (req, res) => {
   res.render("admin/login", {
     layout: false,
+    errors: 0,
   });
 };
 const adminLogin = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // return res.status(400).json({errors:errors.array()}) 
+      return res.render("admin/login", {
+        layout: false,
+        errors: errors.array(),
+      });
+    }
+
     const { username, password } = req.body;
     const user = await userModel.findOne({ username });
     if (!user) {
@@ -36,7 +47,7 @@ const adminLogin = async (req, res, next) => {
     const token = jwt.sign(jwtData, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 * 24 });
     res.redirect("/admin/dashboard");
   } catch (e) {
     // console.log(e);
@@ -158,7 +169,6 @@ const deleteUser = async (req, res, next) => {
     if (!user) {
       // res.status(404).send("User not found");
       return next(createError("User not found", 404));
-
     }
     res.json({ success: true });
   } catch (e) {

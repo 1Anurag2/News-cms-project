@@ -7,11 +7,12 @@ const categoryController = require("../controllers/categoryController");
 const commentController = require("../controllers/commentController");
 const isLoggedin = require("../middleware/isLoggedin");
 const isAdmin = require("../middleware/isAdmin");
+const isValid = require("../middleware/validation");
 const upload = require("../middleware/multer");
 
 //Login Routes
 router.get("/", userController.loginPage);
-router.post("/index", userController.adminLogin);
+router.post("/index", isValid.loginValidation, userController.adminLogin);
 router.get("/logout", userController.logout);
 router.get("/dashboard", isLoggedin, userController.dashboard);
 router.get("/setting", isLoggedin, isAdmin, userController.setting);
@@ -26,7 +27,7 @@ router.post(
 //User crud routes
 router.get("/users", isLoggedin, isAdmin, userController.allUsers);
 router.get("/add-users", isLoggedin, isAdmin, userController.addUserPage);
-router.post("/add-users", isLoggedin, isAdmin, userController.addUser);
+router.post("/add-users", isLoggedin,isValid.userValidation, isAdmin, userController.addUser);
 router.get(
   "/update-users/:id",
   isLoggedin,
@@ -36,6 +37,7 @@ router.get(
 router.post(
   "/update-users/:id",
   isLoggedin,
+  isValid.userUpdateValidation,
   isAdmin,
   userController.updateUser
 );
@@ -57,6 +59,7 @@ router.get(
 router.post(
   "/add-category",
   isLoggedin,
+  isValid.categoryValidation,
   isAdmin,
   categoryController.addCategory
 );
@@ -69,6 +72,7 @@ router.get(
 router.post(
   "/update-category/:id",
   isLoggedin,
+  isValid.categoryValidation,
   isAdmin,
   categoryController.updateCategory
 );
@@ -85,6 +89,7 @@ router.get("/add-articles", isLoggedin, articleController.addArticlePage);
 router.post(
   "/add-articles",
   isLoggedin,
+  isValid.articalValidation,
   upload.single("image"),
   articleController.addArticle
 );
@@ -96,6 +101,7 @@ router.get(
 router.post(
   "/update-articles/:id",
   isLoggedin,
+  isValid.articalValidation,
   upload.single("image"),
   articleController.updateArticle
 );

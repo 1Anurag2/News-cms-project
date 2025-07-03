@@ -68,7 +68,8 @@ const updateArticlePage = async (req, res, next) => {
     }
     if (req.role == "Author") {
       if (req.id != article.author._id) {
-        res.status(401).send("Unauthorized");
+        // res.status(401).send("Unauthorized");
+        return next(createError('Unauthorized',401));
       }
     }
     const categories = await categoryModel.find();
@@ -127,7 +128,9 @@ const deleteArticle = async (req, res , next) => {
 
     if (req.role == "Author") {
       if (req.id != article.author._id) {
-        return res.status(401).send("Unauthorized");
+        // return res.status(401).send("Unauthorized");
+        return next(createError('Unauthorized',401));
+
       }
     }
     //delete image

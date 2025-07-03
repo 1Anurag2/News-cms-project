@@ -45,11 +45,11 @@
                   class="form-control"
                 >
                   <option disabled selected>Select Category</option>
-                  <% categories.forEach((category) => {  %> 
-                    <!-- console.log(category); -->
-                    <option value="<%= category._id %>" selected>
+                  <% categories.forEach((category) => { %>
+                  <!-- console.log(category); -->
+                  <option value="<%= category._id %>" selected>
                     <%= category.name %>
-                  </option> 
+                  </option>
                   <% }); %>
                 </select>
               </div>
@@ -74,6 +74,9 @@
               />
             </form>
             <!--/Form -->
+            <!--Validation Error Message -->
+            <%- include('partials/validationError') %>
+            <!--/Validation Error Message -->
           </div>
         </div>
       </div>
