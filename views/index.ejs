@@ -1,38 +1,4 @@
 <!-- post-container -->
-<% for (var i = 0; i < article.length; i++) { %>
-<div class="post-container">
-  <div class="post-content">
-    <div class="row">
-      <div class="col-md-4">
-        <a class="post-img" href="single.html">
-          <img src="uploads/<%= article[i].image %>" alt="" />
-        </a>
-      </div>
-      <div class="col-md-8">
-        <div class="inner-content clearfix">
-          <h3><a href="single.html"><%= article[i].title %></a></h3>
-          <div class="post-information">
-            <span>
-              <i class="fa fa-tags" aria-hidden="true"></i>
-              <a href="category.html"><%= article[i].category.name %></a>
-            </span>
-            <span>
-              <i class="fa fa-user" aria-hidden="true"></i>
-              <a href="author.html"><%= article[i].author.fullname %></a>
-            </span>
-            <span>
-              <i class="fa fa-calendar" aria-hidden="true"></i>
-              <%= article[i].createdAt %>
-            </span>
-          </div>
-          <div style="max-height: 80px; overflow-y: auto">
-            <p class="description"><%= article[i].content %></p>
-          </div>
-          <a class="read-more pull-right" href="/single/<%= article[i]._id %>">read more</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<% } %>
+
+<div class="post-container"><%- include('partials/loop') %></div>
 <!-- /post-container -->

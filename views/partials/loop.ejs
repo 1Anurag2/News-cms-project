@@ -1,0 +1,59 @@
+<% news.forEach(function(item) { %>
+<div class="post-container">
+  <div class="post-content">
+    <div class="row">
+      <div class="col-md-4">
+        <a class="post-img" href="/single/<%= item._id %>">
+          <img src="/uploads/<%= item.image %>" alt="" />
+        </a>
+      </div>
+      <div class="col-md-8">
+        <div class="inner-content clearfix">
+          <h3><a href="/single/<%= item._id %>"><%= item.title %></a></h3>
+          <div class="post-information">
+            <span>
+              <i class="fa fa-tags" aria-hidden="true"></i>
+              <a href="/category/<%= item.category.slug %>"
+                ><%= item.category.name %></a
+              >
+            </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>
+              <a href="/author/<%= item.author._id %>"
+                ><%= item.author.fullname %></a
+              >
+            </span>
+            <span>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <%= item.createdAt %>
+            </span>
+          </div>
+          <div style="max-height: 80px; overflow-y: auto">
+            <p class="description">
+              <%= item.content.substring(0, 100) + '...' %>
+            </p>
+          </div>
+          <a class="read-more pull-right" href="/single/<%= item._id %>"
+            >read more</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); %>
+<nav>
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active">
+      <a class="page-link" href="#" aria-current="page">2</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
