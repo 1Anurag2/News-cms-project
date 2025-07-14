@@ -32,6 +32,10 @@
             if(response.ok){
               window.location.reload();
             }
+            if(response.status == 400){
+              const data = await response.json();
+              alert(data.message)
+            }
         }
       }catch(e){
         console.log(e);

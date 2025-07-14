@@ -18,7 +18,9 @@
       </span>
       <span>
         <i class="fa fa-calendar" aria-hidden="true"></i>
-        <%= singlenews.createdAt %>
+        <% var date = new Date(singlenews.createdAt); %> <%=
+        date.toLocaleString('en-US', { year: 'numeric', month: 'long', day:
+        'numeric' }) %>
       </span>
     </div>
     <img
@@ -26,7 +28,7 @@
       src="/uploads/<%= singlenews.image %>"
       alt=""
     />
-    <p class="description"><%= singlenews.content %></p>
+    <p class="description"><%- singlenews.content %></p>
   </div>
 </div>
 <!-- /post-container -->

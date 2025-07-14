@@ -2,11 +2,21 @@
 <div class="post-container">
   <div class="post-content">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" style="overflow: hidden; border-radius: 5px">
         <a class="post-img" href="/single/<%= item._id %>">
-          <img src="/uploads/<%= item.image %>" alt="" />
+          <img
+            src="/uploads/<%= item.image %>"
+            alt=""
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 5px;
+            "
+          />
         </a>
       </div>
+
       <div class="col-md-8">
         <div class="inner-content clearfix">
           <h3><a href="/single/<%= item._id %>"><%= item.title %></a></h3>
@@ -25,13 +35,13 @@
             </span>
             <span>
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <%= item.createdAt %>
+              <% var date = new Date(item.createdAt); %> <%=
+              date.toLocaleString('en-US', { year: 'numeric', month: 'long',
+              day: 'numeric' }) %>
             </span>
           </div>
           <div style="max-height: 80px; overflow-y: auto">
-            <p class="description">
-              <%= item.content.substring(0, 100) + '...' %>
-            </p>
+            <p class="description"><%= item.summary %></p>
           </div>
           <a class="read-more pull-right" href="/single/<%= item._id %>"
             >read more</a
@@ -42,18 +52,26 @@
   </div>
 </div>
 <% }); %>
-<nav>
+<% if (totalPages > 0) { %>
+<nav aria-label="Page navigation">
   <ul class="pagination">
-    <li class="page-item disabled">
-      <a class="page-link">Previous</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item active">
-      <a class="page-link" href="#" aria-current="page">2</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#">Next</a>
-    </li>
+    <% if (hasPrevPage) { %>
+      <li class="page-item">
+        <a class="page-link" href="/?page=<%= prevPage %>">Previous</a>
+      </li>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+        <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+      </li>
+    <% } %>
+
+    <% if (hasNextPage) { %>
+      <li class="page-item">
+        <a class="page-link" href="/?page=<%= nextPage %>">Next</a>
+      </li>
+    <% } %>
   </ul>
 </nav>
+<% } %>

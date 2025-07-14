@@ -1,107 +1,51 @@
 <!-- sidebar -->
-        <div id="sidebar" class="col-md-4">
-          <!-- search box -->
-          <div class="search-box-container">
-              <h4>Search</h4>
-              <form class="search-post" action="/search" method ="GET">
-                  <div class="input-group">
-                      <input type="text" name="search" class="form-control" placeholder="Search .....">
-                      <span class="input-group-btn">
-                          <button type="submit" class="btn btn-danger">Search</button>
-                      </span>
-                  </div>
-              </form>
-          </div>
-          <!-- /search box -->
-          <!-- recent posts box -->
-          <div class="recent-post-container">
-              <h4>Recent Posts</h4>
-              <div class="recent-post">
-                  <a class="post-img" href="">
-                      <img src="images/post-format.jpg" alt=""/>
-                  </a>
-                  <div class="post-content">
-                      <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-                      <span>
-                          <i class="fa fa-tags" aria-hidden="true"></i>
-                          <a href='category.html'>Html</a>
-                      </span>
-                      <span>
-                          <i class="fa fa-calendar" aria-hidden="true"></i>
-                          01 Nov, 2025
-                      </span>
-                      <a class="read-more" href="single.html">read more</a>
-                  </div>
-              </div>
-              <div class="recent-post">
-                  <a class="post-img" href="">
-                      <img src="images/post_1.jpg" alt=""/>
-                  </a>
-                  <div class="post-content">
-                      <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-                      <span>
-                          <i class="fa fa-tags" aria-hidden="true"></i>
-                          <a href='category.html'>Html</a>
-                      </span>
-                      <span>
-                          <i class="fa fa-calendar" aria-hidden="true"></i>
-                          01 Nov, 2025
-                      </span>
-                      <a class="read-more" href="single.html">read more</a>
-                  </div>
-              </div>
-              <div class="recent-post">
-                  <a class="post-img" href="">
-                      <img src="images/post-format.jpg" alt=""/>
-                  </a>
-                  <div class="post-content">
-                      <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-                      <span>
-                          <i class="fa fa-tags" aria-hidden="true"></i>
-                          <a href='category.html'>Html</a>
-                      </span>
-                      <span>
-                          <i class="fa fa-calendar" aria-hidden="true"></i>
-                          01 Nov, 2025
-                      </span>
-                      <a class="read-more" href="single.html">read more</a>
-                  </div>
-              </div>
-              <div class="recent-post">
-                  <a class="post-img" href="">
-                      <img src="images/post_1.jpg" alt=""/>
-                  </a>
-                  <div class="post-content">
-                      <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-                      <span>
-                          <i class="fa fa-tags" aria-hidden="true"></i>
-                          <a href='category.html'>Html</a>
-                      </span>
-                      <span>
-                          <i class="fa fa-calendar" aria-hidden="true"></i>
-                          01 Nov, 2025
-                      </span>
-                      <a class="read-more" href="single.html">read more</a>
-                  </div>
-              </div>
-              <div class="recent-post">
-                  <a class="post-img" href="">
-                      <img src="images/post-format.jpg" alt=""/>
-                  </a>
-                  <div class="post-content">
-                      <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-                      <span>
-                          <i class="fa fa-tags" aria-hidden="true"></i>
-                          <a href='category.html'>Html</a>
-                      </span>
-                      <span>
-                          <i class="fa fa-calendar" aria-hidden="true"></i>
-                          01 Nov, 2025
-                      </span>
-                      <a class="read-more" href="single.html">read more</a>
-                  </div>
-              </div>
-          </div>
-          <!-- /recent posts box -->
-        </div>
-        <!-- /sidebar -->
+<div id="sidebar" class="col-md-4">
+  <!-- search box -->
+  <div class="search-box-container">
+    <h4>Search</h4>
+    <form class="search-post" action="/search" method="GET">
+      <div class="input-group">
+        <input
+          type="text"
+          name="search"
+          class="form-control"
+          placeholder="Search ....."
+        />
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-danger">Search</button>
+        </span>
+      </div>
+    </form>
+  </div>
+  <!-- /search box -->
+  <!-- recent posts box -->
+  <div class="recent-post-container">
+    <h4>Recent Posts</h4>
+    <% recentnews.forEach(function(item) { %>
+    <div class="recent-post">
+      <a class="post-img" href="/single/<%= item._id %>">
+        <img src="/uploads/<%= item.image %>" alt="" />
+      </a>
+      <div class="post-content">
+        <h5><a href="/single/<%= item._id %>"><%= item.title %></a></h5>
+        <span>
+          <i class="fa fa-tags" aria-hidden="true"></i>
+          <a href="/category/<%= item.category.slug %>"
+            ><%= item.category.name %></a
+          >
+        </span>
+        <span>
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          <% var date = new Date(item.createdAt); %> <%=
+          date.toLocaleString('en-US', { year: 'numeric', month: 'long', day:
+          'numeric' }) %>
+        </span>
+        <a class="read-more" href="/single/<%= item._id %>">read more</a>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <!-- /recent posts box -->
+</div>
+<!-- /sidebar -->
