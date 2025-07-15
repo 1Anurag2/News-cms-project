@@ -89,8 +89,8 @@ router.get("/add-articles", isLoggedin, articleController.addArticlePage);
 router.post(
   "/add-articles",
   isLoggedin,
-  isValid.articalValidation,
   upload.single("image"),
+  isValid.articleValidation,
   articleController.addArticle
 );
 router.get(
@@ -101,7 +101,7 @@ router.get(
 router.post(
   "/update-articles/:id",
   isLoggedin,
-  isValid.articalValidation,
+  isValid.articleValidation,
   upload.single("image"),
   articleController.updateArticle
 );
