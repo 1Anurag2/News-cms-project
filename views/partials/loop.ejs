@@ -52,24 +52,36 @@
   </div>
 </div>
 <% }); %>
-<% if (totalPages > 0) { %>
-<nav aria-label="Page navigation">
+
+
+<% if (totalPages > 1) { %>
+<nav>
   <ul class="pagination">
     <% if (hasPrevPage) { %>
       <li class="page-item">
-        <a class="page-link" href="/?page=<%= prevPage %>">Previous</a>
+        <a class="page-link" href="<%= baseUrl %>?page=<%= prevPage %>">Previous</a>
+      </li>
+    <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
       </li>
     <% } %>
 
     <% for (let i = 1; i <= totalPages; i++) { %>
       <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-        <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+        <a class="page-link" href="<%= baseUrl %>?page=<%= i %>" <%= i === currentPage ? 'aria-current="page"' : '' %>>
+          <%= i %>
+        </a>
       </li>
     <% } %>
 
     <% if (hasNextPage) { %>
       <li class="page-item">
-        <a class="page-link" href="/?page=<%= nextPage %>">Next</a>
+        <a class="page-link" href="<%= baseUrl %>?page=<%= nextPage %>">Next</a>
+      </li>
+    <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link">Next</span>
       </li>
     <% } %>
   </ul>

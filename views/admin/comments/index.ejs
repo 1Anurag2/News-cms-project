@@ -1,3 +1,4 @@
+<!-- <%= comments  %> -->
 <div id="admin-content">
   <div class="container">
     <div class="row">
@@ -17,146 +18,26 @@
             <th>Actions</th>
           </thead>
           <tbody>
+            <% comments.forEach((comment) => { %>
             <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
+              <td class="id"><%= comment.article.title %></td>
+              <td><%= comment.name %></td>
+              <td><%= comment.content %></td>
+              <td><%= comment.status %></td>
+              <td><%= new Date(comment.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-') %></td>
               <td class="edit">
                 <select
                   name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
+                  data-comment-id="<%= comment._id %>"
+                  class="form-select form-select-sm d-inline-block w-auto update-comment-status"
                 >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
+                  <option value="pending" <%= comment.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                  <option value="approved" <%= comment.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                  <option value="rejected" <%= comment.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
                 </select>
               </td>
             </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">Ipsum dolor sit amet</td>
-              <td>Rahul Sharma</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus, eveniet!
-              </td>
-              <td>Approved</td>
-              <td>02-Nov-2025</td>
-              <td class="edit">
-                <select
-                  name="status"
-                  class="form-select form-select-sm d-inline-block w-auto"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved" selected="">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </td>
-            </tr>
+            <% }); %>
           </tbody>
         </table>
         <nav aria-label="...">
@@ -178,3 +59,37 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const selects = document.querySelectorAll('.update-comment-status');
+
+    selects.forEach(select => {
+      select.addEventListener('change', async () => {
+        const commentId = select.dataset.commentId;
+        const newStatus = select.value;
+
+        try {
+          const response = await fetch(`/admin/comments/${commentId}/status`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+          });
+
+          if (response.ok) {
+            window.location.reload();
+            alert('Status updated successfully!');
+          } else {
+            alert('Failed to update status.');
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error updating status.');
+        }
+      });
+    });
+  });
+</script>
