@@ -1,10 +1,11 @@
 const userModel = require("../models/User");
 const categoryModel = require("../models/Category");
-const articalModel = require("../models/News");
+const newsModel = require("../models/News");
 const siteModel = require("../models/siteChange");
 const createError = require("../utils/error-message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const fs = require('fs')
 const dotenv = require("dotenv");
 const { validationResult } = require("express-validator");
 
@@ -20,7 +21,7 @@ const adminLogin = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      // return res.status(400).json({errors:errors.array()}) 
+      // return res.status(400).json({errors:errors.array()})
       return res.render("admin/login", {
         layout: false,
         errors: errors.array(),
@@ -47,7 +48,7 @@ const adminLogin = async (req, res, next) => {
     const token = jwt.sign(jwtData, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 * 24 });
+    res.cookie("token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     res.redirect("/admin/dashboard");
   } catch (e) {
     // console.log(e);
@@ -65,9 +66,9 @@ const dashboard = async (req, res, next) => {
   try {
     let articalcount;
     if (req.role == "Author") {
-      articalcount = await articalModel.countDocuments({ author: req.id });
+      articalcount = await newsModel.countDocuments({ author: req.id });
     } else {
-      articalcount = await articalModel.countDocuments({});
+      articalcount = await newsModel.countDocuments({});
     }
     const usercount = await userModel.countDocuments({});
     const categorycount = await categoryModel.countDocuments({});
@@ -101,11 +102,23 @@ const save_setting = async (req, res, next) => {
   const { website_title, footer_description } = req.body;
   const website_logo = req.file ? req.file.filename : null;
   try {
-    const setting = await siteModel.findOneAndUpdate(
-      {},
-      { website_title, footer_description, website_logo },
-      { upsert: true, new: true }
-    );
+    let setting = await siteModel.findOne({});
+    if (!setting) {
+      setting = new siteModel();
+    }
+    setting.website_title = website_title;
+    setting.footer_description = footer_description;
+    if(website_logo){
+      if(setting.website_logo){
+        const logoPath = `./public/uploads/${setting.website_logo}`;
+        if(fs.existsSync(logoPath)){
+          fs.unlinkSync(logoPath);
+        }
+      }
+      setting.website_logo = website_logo;
+
+    }
+    await setting.save();
     res.redirect(`/admin/setting`);
   } catch (error) {
     // console.error('Error creating site settings:', error);
@@ -119,10 +132,18 @@ const allUsers = async (req, res) => {
 };
 
 const addUserPage = async (req, res) => {
-  res.render("admin/users/create", { role: req.role });
+  res.render("admin/users/create", { role: req.role, errors: 0 });
 };
 
 const addUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // return res.status(400).json({errors:errors.array()})
+    return res.render("admin/users/create", {
+      role: req.role,
+      errors: errors.array(),
+    });
+  }
   await userModel.create(req.body);
   res.redirect("/admin/users");
 };
@@ -133,7 +154,7 @@ const updateUserPage = async (req, res, next) => {
     if (!user) {
       res.status(404).send("User not found");
     }
-    res.render("admin/users/update", { user, role: req.role });
+    res.render("admin/users/update", { user, role: req.role, errors: 0 });
   } catch (e) {
     // res.status(500).send(e.message);
     next(e);
@@ -142,6 +163,15 @@ const updateUserPage = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const id = req.params.id;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // return res.status(400).json({errors:errors.array()})
+    return res.render("admin/users/update", {
+      user: req.body,
+      role: req.role,
+      errors: errors.array(),
+    });
+  }
   const { fullname, password, role } = req.body;
   try {
     const user = await userModel.findById(id);
@@ -154,6 +184,7 @@ const updateUser = async (req, res, next) => {
       user.password = password;
     }
     user.role = role || user.role;
+
     await user.save();
     res.redirect("/admin/users");
   } catch (e) {
@@ -165,11 +196,18 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const user = await userModel.findByIdAndDelete(req.params.id);
+    const id = req.params.id;
+    const user = await userModel.findById(id);
     if (!user) {
       // res.status(404).send("User not found");
       return next(createError("User not found", 404));
     }
+    const article = await newsModel.findOne({ author: id});
+    if(article){
+      return res.status(400).json({success:false,message:'User is associated with an article'})
+    }
+    
+    await user.deleteOne();
     res.json({ success: true });
   } catch (e) {
     // console.log(e);

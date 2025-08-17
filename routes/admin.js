@@ -113,6 +113,7 @@ router.delete(
 
 //Comment  routes
 router.get("/comments", isLoggedin, commentController.allComments);
+router.put("/comments/:id/status", commentController.updateStatus);
 
 // 404 Middleware
 router.use(isLoggedin, (req, res, next) => {

@@ -5,6 +5,8 @@ const userModel = require("../models/User");
 const fs = require("fs");
 const path = require("path");
 const createError = require('../utils/error-message');
+const { validationResult } = require("express-validator");
+
 
 const allArticles = async (req, res, next) => {
   try {
@@ -30,9 +32,21 @@ const allArticles = async (req, res, next) => {
 };
 const addArticlePage = async (req, res) => {
   const categories = await categoryModel.find();
-  res.render("admin/articles/create", { role: req.role, categories });
+  res.render("admin/articles/create", { role: req.role, categories, errors: 0 });
 };
-const addArticle = async (req, res, next) => {
+
+
+const addArticle = async (req,res,next) => { 
+  const errors = validationResult(req); 
+       if (!errors.isEmpty()) {
+        const categories = await categoryModel.find();
+        return res.render('admin/articles/create',{
+          role: req.role,
+          errors: errors.array(),
+          categories
+        })
+      }
+
   try {
     const { title, content, category } = req.body;
     const article = new newsModel({
@@ -40,17 +54,18 @@ const addArticle = async (req, res, next) => {
       content,
       category,
       author: req.id,
-      image: req.file.filename,
+      image: req.file.filename
     });
-
     await article.save();
-    res.redirect("/admin/articles");
-  } catch (e) {
-    // console.log(e);
-    // res.status(500).send("Internal Server Error");
-    next(e);
+    res.redirect('/admin/articles');
+  } catch (error) {
+    // console.log(error);
+    // res.status(500).send('Article not saved');
+    next(error)
   }
-};
+}
+
+
 const updateArticlePage = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -76,6 +91,7 @@ const updateArticlePage = async (req, res, next) => {
     res.render("admin/articles/update", {
       article,
       categories,
+      errors: 0,
       role: req.role,
     });
   } catch (error) {
@@ -84,9 +100,22 @@ const updateArticlePage = async (req, res, next) => {
     next(error);
   }
 };
+
+
 const updateArticle = async (req, res , next) => {
   try {
     const id = req.params.id;
+    const errors = validationResult(req);
+    const categories = await categoryModel.find();
+    if (!errors.isEmpty()) {
+      // return res.status(400).json({errors:errors.array()}) 
+      return res.render("admin/articles/update", {
+        article: req.body,
+        role:req.role,
+        categories,
+        errors: errors.array(),
+      });
+    }
     const { title, content, category } = req.body;
     const article = await newsModel.findById(id);
     if (!article) {
@@ -110,14 +139,17 @@ const updateArticle = async (req, res , next) => {
       fs.unlinkSync(imagePath);
       article.image = req.file.filename;
     }
+    
     await article.save();
     res.redirect("/admin/articles");
   } catch (e) {
-    // console.log(e);
-    // res.status(500).send("Internal Server Error");
-    next(e);
+    console.log(e);
+    res.status(500).send("Internal Server Error");
+    // next(e);
   }
 };
+
+
 const deleteArticle = async (req, res , next) => {
   try {
     const news = await newsModel.findById(req.params.id);
