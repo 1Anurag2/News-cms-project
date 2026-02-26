@@ -39,6 +39,10 @@ app.use("/admin", (req, res, next) => {
 });
 app.use("/admin", require("./routes/admin"));
 
-app.listen(port, (req, res) => {
-  console.log(`Server is running at ${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Server is running at ${port}`);
+  });
+}
+
+module.exports = app;
